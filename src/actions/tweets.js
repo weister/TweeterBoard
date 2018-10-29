@@ -1,7 +1,8 @@
-import { saveLikeToggle } from '../utils/api'
+import { saveLikeToggle, saveTweet } from '../utils/api'
 
 export const RECEIVE_TWEETS = 'RECEIVE_TWEETS'
 export const TOGGLE_TWEET = 'TOGGLE_TWEET'
+export const ADD_TWEET = 'ADD_TWEET'
 
 export function receiveTweets (tweets) {
   return {
@@ -16,6 +17,24 @@ function toggleTweet ({ id, authedUser, hasLiked }) {
     id,
     authedUser,
     hasLiked
+  }
+}
+
+function addTweet (tweet, replyingTo) {
+  return {
+    type: ADD_TWEET,
+  }
+}
+
+export function handleAddTweet (tweet, replyingTo) {
+  return (dispatch) => {
+
+    return saveTweet(tweet)
+      .then(() => dispatch(addTweet(tweet, replyingTo)))
+      .catch((e) => {
+        console.warn('Error with saving the tweet: ', e)
+        dispatch()
+      })
   }
 }
 
